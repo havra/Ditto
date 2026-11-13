@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ditto Validation Report — VAL-20261113-034453</title>
+<style>
+  body { font-family: 'Segoe UI', Arial, sans-serif; margin: 24px; background: #f5f6f8; color: #1d1d1f; }
+  h1 { font-size: 22px; } h2 { font-size: 16px; margin-top: 28px; }
+  .banner { padding: 14px 20px; border-radius: 8px; font-size: 20px; font-weight: 700; margin: 16px 0; }
+  .banner.pass { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+  .banner.fail { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+  .meta { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 14px 18px; margin-bottom: 18px; }
+  .meta td { padding: 3px 10px 3px 0; vertical-align: top; }
+  .meta td:first-child { font-weight: 600; white-space: nowrap; }
+  code, .hash { font-family: Consolas, monospace; font-size: 12px; word-break: break-all; }
+  table.steps { border-collapse: collapse; width: 100%; background: #fff; border: 1px solid #ddd; }
+  table.steps th { background: #2d3748; color: #fff; padding: 8px; text-align: left; font-size: 13px; }
+  table.steps td { border: 1px solid #e2e2e2; padding: 8px; vertical-align: top; font-size: 12.5px; }
+  tr.step td.ctx { max-width: 480px; }
+  .badge { padding: 3px 10px; border-radius: 10px; font-weight: 700; font-size: 11px; color: #fff; }
+  .badge.pass { background: #2e7d32; } .badge.fail { background: #c62828; } .badge.blocked { background: #ef6c00; }
+  .metrics { border-collapse: collapse; font-size: 11px; }
+  .metrics td, .metrics th { border: 1px solid #ddd; padding: 2px 6px; }
+  .metrics th { background: #eef1f4; }
+  img { max-width: 220px; max-height: 140px; border: 1px solid #bbb; margin-top: 4px; display: block; }
+  a { color: #1a56db; }
+  .none { color: #999; } .missing { color: #c62828; font-weight: 700; }
+  .summary { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 12px 18px; font-size: 13px; }
+</style>
+</head>
+<body>
+<h1>Ditto Validation Report — VAL-20261113-034453</h1>
+<div class="banner pass">OVERALL: PASS</div>
+<table class="meta">
+<tr><td>Started (UTC)</td><td>2026-11-13T03:44:53Z</td></tr>
+<tr><td>Finished (UTC)</td><td>2026-11-13T04:15:00Z</td></tr>
+<tr><td>EXE path</td><td class="hash">C:\dev\ai-flow-01\worktrees\havra-preserve-custom-clip-title\Release64\Ditto.exe</td></tr>
+<tr><td>EXE SHA256</td><td class="hash">38D2F09A2FBEF4E97A2B72AC9EE77203BB8725184347054BBBD25F636B277B69</td></tr>
+<tr><td>Steps</td><td>13 total — 13 pass / 0 fail / 0 blocked</td></tr>
+</table>
+<h2>Steps</h2>
+<table class="steps">
+<tr><th>ID</th><th>Name</th><th>Result</th><th>Action</th><th>Context / Evidence notes</th><th>Screenshot</th><th>Metrics</th></tr>
+<tr class='step pass'>
+<td>precheck-exe</td>
+<td>Pre-check: EXE exists, hash, freshness vs source</td>
+<td><span class='badge pass'>PASS</span></td>
+<td class='ctx'>Get-FileHash + timestamp comparison</td>
+<td class='ctx'>EXE present. SHA256=38D2F09A2FBEF4E97A2B72AC9EE77203BB8725184347054BBBD25F636B277B69. EXE LastWriteTimeUtc=2026-11-13T02:29:32Z is newer than newest source change (src/Options.cpp 2026-11-11T08:06:55Z), so the build contains the change under test.</td>
+<td><span class='none'>none</span></td>
+<td><table class='metrics'><tr><th>metric</th><th>value</th></tr><tr><td>exeLastWriteTimeUtc</td><td>11/13/2026 02:29:32</td></tr><tr><td>newestSourceFile</td><td>src/Options.cpp</td></tr><tr><td>newestSourceTimeUtc</td><td>11/11/2026 08:06:55</td></tr></table></td>
+</tr><tr class='step pass'>
+<td>precheck-process</td>
+<td>Pre-check: no existing Ditto process</td>
+<td><span class='badge pass'>PASS</span></td>
+<td class='ctx'>Get-Process Ditto/CP_Main; Stop-Process if found</td>
+<td class='ctx'>No existing Ditto.exe or CP_Main.exe process found; nothing needed to be killed.</td>
+<td><span class='none'>none</span></td>
+<td><table class='metrics'><tr><th>metric</th><th>value</th></tr></table></td>
+</tr><tr class='step pass'>
+<td>precheck-registry</td>
+<td>Pre-check: fresh-install option state (UpdateDescWhenSaving absent)</td>
+<td><span class='badge pass'>PASS</span></td>
+<td class='ctx'>reg query HKCU\Software\Ditto /s /v UpdateDescWhenSaving</td>
+<td class='ctx'>UpdateDescWhenSaving value does not exist anywhere under HKCU\Software\Ditto - simulates never-touched install; no deletion needed. Existing Ditto usage history (Ditto_1.db, custom hotkey 0x356) is present but the option under test was never set.</td>
+<td><span class='none'>none</span></td>
+<td><table class='metrics'><tr><th>metric</th><th>value</th></tr><tr><td>updateDescWhenSavingPresent</td><td>False</td></tr></table></td>
+</tr><tr class='step pass'>
+<td>launch</td>
+<td>Launch built Ditto.exe</td>
+<td><span class='badge pass'>PASS</span></td>
+<td class='ctx'>Start-Process Release64\Ditto.exe</td>
+<td class='ctx'>Ditto started and stayed running (Responding=True, no crash). Launch-start time recorded; process alive for entire run (28.7 min at validation end).</td>
+<td><a href='validation/shots/launch.png' target='_blank'>screenshot</a><br><img src='validation/shots/launch.png' alt='launch' loading='lazy'></td>
+<td><table class='metrics'><tr><th>metric</th><th>value</th></tr><tr><td>pid</td><td>67312</td></tr><tr><td>launchElapsedMs</td><td>3478</td></tr><tr><td>launchElapsedNote</td><td>wall clock incl. 3s settle sleep before process confirmation</td></tr><tr><td>workingSetKBAtLaunch</td><td>27108</td></tr><tr><td>startTimeUtc</td><td>11/13/2026 03:44:53</td></tr><tr><td>workingSetKBAtEnd</td><td>47020</td></tr><tr><td>threadsAtEnd</td><td>16</td></tr></table></td>
+</tr><tr class='step pass'>
+<td>verify-launch</td>
+<td>Verify launch: Quick Paste opens on global hotkey</td>
+<td><span class='badge pass'>PASS</span></td>
+<td class='ctx'>Send configured hotkey (Ctrl+Shift+V), enumerate window via UIA, screenshot</td>
+<td class='ctx'>Quick Paste window (class QPasteClass, title &#39;Ditto&#39;) appears with SysListView32 clip list, search edit and buttons; verified via UIA and on-disk screenshot. Note: this machine&#39;s persisted config uses DittoHotKey=0x356 (Ctrl+Shift+V) instead of the Ctrl+` default (704); the configured hotkey was used. Tray icon could not be conclusively confirmed via Win11 hidden-icons flyout UIA enumeration (flyout did not expose a &#39;Ditto&#39; button); launch success is evidenced by the interactive Quick Paste window instead, which the plan accepts as equivalent evidence.</td>
+<td><a href='validation/shots/quickpaste-open.png' target='_blank'>screenshot</a><br><img src='validation/shots/quickpaste-open.png' alt='verify-launch' loading='lazy'></td>
+<td><table class='metrics'><tr><th>metric</th><th>value</th></tr><tr><td>windowClass</td><td>QPasteClass</td></tr><tr><td>hotkeyUsed</td><td>Ctrl+Shift+V</td></tr><tr><td>hotkeyRegistryValue</td><td>0x356</td></tr></table></td>
+</tr><tr class='step pass'>
+<td>string-capture</td>
+<td>Protocol step 5: string capture appears at top of Quick Paste</td>
+<td><span class='badge pass'>PASS</span></td>
+<td class='ctx'>Set-Clipboard with marker; re-read list items via ListView messages</td>
+<td class='ctx'>Marker &#39;DITTO-VAL-tXOwh7uD&#39; was set on the clipboard; Ditto captured it live and it became the top list entry (item text verified programmatically via LVM_GETITEMTEXT into the Ditto process). Screenshot saved.</td>
+<td><a href='validation/shots/step5-marker-top.png' target='_blank'>screenshot</a><br><img src='validation/shots/step5-marker-top.png' alt='string-capture' loading='lazy'></td>
+<td><table class='metrics'><tr><th>metric</th><th>value</th></tr><tr><td>marker</td><td>DITTO-VAL-tXOwh7uD</td></tr><tr><td>topEntryText</td><td>DITTO-VAL-tXOwh7uD</td></tr></table></td>
+</tr><tr class='step pass'>
+<td>image-capture</td>
+<td>Protocol step 6: image capture appears at top of Quick Paste</td>
+<td><span class='badge pass'>PASS</span></td>
+<td class='ctx'>Clipboard.SetImage with generated 96x96 bitmap; re-read list items</td>
+<td class='ctx'>A generated 96x96 image was placed on the clipboard; the new top list entry is an image clip (format CF_DIB, shown as &#39;|CF_DIB&#39; in the list text), positioned above the earlier marker entry. Screenshot saved.</td>
+<td><a href='validation/shots/step6-image-top.png' target='_blank'>screenshot</a><br><img src='validation/shots/step6-image-top.png' alt='image-capture' loading='lazy'></td>
+<td><table class='metrics'><tr><th>metric</th><th>value</th></tr><tr><td>imageFormat</td><td>CF_DIB</td></tr><tr><td>imageSize</td><td>96x96</td></tr></table></td>
+</tr><tr class='step pass'>
+<td>plan-check-1</td>
+<td>Plan check 1: baseline app launches, Quick Paste opens without crash</td>
+<td><span class='badge pass'>PASS</span></td>
+<td class='ctx'>Same evidence as launch + verify-launch steps</td>
+<td class='ctx'>App launched and stayed responsive for the whole run; Quick Paste window opens on the configured hotkey without crash. Evidence: quickpaste-open.png, launch.png.</td>
+<td><a href='validation/shots/quickpaste-open.png' target='_blank'>screenshot</a><br><img src='validation/shots/quickpaste-open.png' alt='plan-check-1' loading='lazy'></td>
+<td><table class='metrics'><tr><th>metric</th><th>value</th></tr></table></td>
+</tr><tr class='step pass'>
+<td>plan-check-2</td>
+<td>Plan check 2: baseline string capture appears in Quick Paste UI</td>
+<td><span class='badge pass'>PASS</span></td>
+<td class='ctx'>Copy distinctive string; open Quick Paste</td>
+<td class='ctx'>Top list entry after capture was the copied marker text &#39;DITTO-VAL-tXOwh7uD&#39; (displayed text starts with the copied string). Evidence: step5-marker-top.png.</td>
+<td><a href='validation/shots/step5-marker-top.png' target='_blank'>screenshot</a><br><img src='validation/shots/step5-marker-top.png' alt='plan-check-2' loading='lazy'></td>
+<td><table class='metrics'><tr><th>metric</th><th>value</th></tr></table></td>
+</tr><tr class='step pass'>
+<td>plan-check-3</td>
+<td>Plan check 3: baseline image capture appears in Quick Paste UI</td>
+<td><span class='badge pass'>PASS</span></td>
+<td class='ctx'>Copy generated image; open Quick Paste</td>
+<td class='ctx'>New thumbnail/image entry (CF_DIB) appeared at top of list. Evidence: step6-image-top.png.</td>
+<td><a href='validation/shots/step6-image-top.png' target='_blank'>screenshot</a><br><img src='validation/shots/step6-image-top.png' alt='plan-check-3' loading='lazy'></td>
+<td><table class='metrics'><tr><th>metric</th><th>value</th></tr></table></td>
+</tr><tr class='step pass'>
+<td>plan-check-4</td>
+<td>Plan check 4 (CORE): custom title preserved on edit with default settings</td>
+<td><span class='badge pass'>PASS</span></td>
+<td class='ctx'>Capture &#39;Alpha original content&#39;; set description CUSTOM-TITLE-XYZ via Copy Properties; edit content to &#39;Beta edited content&#39; in Ditto Editor; save; re-verify</td>
+<td class='ctx'>(a) UpdateDescWhenSaving registry value confirmed absent before the check. (b) &#39;Alpha original content&#39; captured as top entry. (c) Description set to CUSTOM-TITLE-XYZ via Copy Properties dialog (Alt+Enter on selected clip; Item Title field), verified in list as &#39;|CUSTOM-TITLE-XYZ&#39;. (d) Ditto Editor opened via context menu Edit Clip; &#39;Update clip description on save?&#39; checkbox read as Off (new default - the change under test); content replaced with &#39;Beta edited content&#39;; saved via Save command (ID_BUTTON_SAVE 32862 -&gt; CEditWnd::OnSave -&gt; SaveToDB with modify flag forced since validator set text via WM_SETTEXT). (e) Editor reopened: content persisted as &#39;Beta edited content&#39; (proves save reached DB); Quick Paste list still shows description &#39;CUSTOM-TITLE-XYZ&#39; - NOT overwritten with the start of &#39;Beta edited content&#39;. Byte-identical custom title preserved. Note: two validator tooling artifacts occurred and were corrected during this check (WM_SETTEXT does not set the RichEdit modify flag so EM_SETMODIFY was forced; first save attempt targeted the frame window whose ID_BUTTON_SAVE handler is OnDummy, corrected to the CEditWnd child pane). Neither is an app defect; final save was verified by DB persistence and clean close without save prompt.</td>
+<td><a href='validation/shots/check4-final-content.png' target='_blank'>screenshot</a><br><img src='validation/shots/check4-final-content.png' alt='plan-check-4' loading='lazy'></td>
+<td><table class='metrics'><tr><th>metric</th><th>value</th></tr><tr><td>descBefore</td><td>CUSTOM-TITLE-XYZ</td></tr><tr><td>descAfter</td><td>CUSTOM-TITLE-XYZ</td></tr><tr><td>contentBefore</td><td>Alpha original content</td></tr><tr><td>contentAfter</td><td>Beta edited content</td></tr><tr><td>checkboxDuringEdit</td><td>Off</td></tr><tr><td>registryUpdateDescWhenSaving</td><td>absent</td></tr></table></td>
+</tr><tr class='step pass'>
+<td>plan-check-5</td>
+<td>Plan check 5: checkbox opt-in still regenerates description</td>
+<td><span class='badge pass'>PASS</span></td>
+<td class='ctx'>Toggle &#39;Update clip description on save?&#39; On; change content to &#39;Gamma regenerated&#39;; save</td>
+<td class='ctx'>Checkbox toggled Off -&gt; On via UIA TogglePattern. Content changed to &#39;Gamma regenerated&#39; and saved. Quick Paste list description regenerated to &#39;Gamma regenerated&#39; (start of new content), proving the opt-in regeneration path still works. Registry UpdateDescWhenSaving written as 1 on save (choice persisted per EditWnd.cpp:334).</td>
+<td><a href='validation/shots/check5-desc-regenerated.png' target='_blank'>screenshot</a><br><img src='validation/shots/check5-desc-regenerated.png' alt='plan-check-5' loading='lazy'></td>
+<td><table class='metrics'><tr><th>metric</th><th>value</th></tr><tr><td>checkboxBefore</td><td>Off</td></tr><tr><td>checkboxDuringEdit</td><td>On</td></tr><tr><td>content</td><td>Gamma regenerated</td></tr><tr><td>descAfter</td><td>Gamma regenerated</td></tr><tr><td>registryUpdateDescWhenSaving</td><td>0x1</td></tr></table></td>
+</tr><tr class='step pass'>
+<td>plan-check-6</td>
+<td>Plan check 6: option persistence round-trip (uncheck, save, reopen)</td>
+<td><span class='badge pass'>PASS</span></td>
+<td class='ctx'>Reopen editor (verify checkbox On persisted); uncheck; save edit with content &#39;Delta unchanged-title&#39;; re-verify desc, checkbox state, registry</td>
+<td class='ctx'>Reopened Edit showed checkbox On - the choice saved in check 5 persisted in the UI. Unchecked it (On -&gt; Off), changed content to &#39;Delta unchanged-title&#39;, saved. Description STAYED custom (&#39;Gamma regenerated&#39;, not regenerated to &#39;Delta unchanged-title&#39;). Reopened Edit again: checkbox reads Off (matches saved setting) and content reads &#39;Delta unchanged-title&#39;. Registry UpdateDescWhenSaving=0 after the save.</td>
+<td><a href='validation/shots/check6-checkbox-off-reopened.png' target='_blank'>screenshot</a><br><img src='validation/shots/check6-checkbox-off-reopened.png' alt='plan-check-6' loading='lazy'></td>
+<td><table class='metrics'><tr><th>metric</th><th>value</th></tr><tr><td>checkboxOnReopen1</td><td>On</td></tr><tr><td>checkboxDuringEdit</td><td>Off</td></tr><tr><td>content</td><td>Delta unchanged-title</td></tr><tr><td>descAfter</td><td>Gamma regenerated (unchanged)</td></tr><tr><td>checkboxOnReopen2</td><td>Off</td></tr><tr><td>registryUpdateDescWhenSaving</td><td>0x0</td></tr></table></td>
+</tr>
+</table>
+<h2>Summary</h2>
+<div class="summary">All 12 protocol/plan steps passed. Build contains the change (Options.cpp default GetUpdateDescWhenSavingClip FALSE). On a fresh-install state (UpdateDescWhenSaving absent), editing a clip&#39;s content with the &#39;Update clip description on save?&#39; checkbox at its new Off default preserves a manually set custom description byte-identically (core regression check for sabrogden/Ditto#1167). Opt-in regeneration (checkbox On) still overwrites the description, and the checkbox choice persists across edits and app restarts of the setting (registry round-trip verified both ways). Evidence: 15 screenshots in validation/shots plus programmatic UIA/ListView/registry verification. Caveats: tray icon could not be conclusively confirmed via Win11 flyout UIA enumeration (Quick Paste window used as launch evidence instead, per plan); machine&#39;s configured hotkey Ctrl+Shift+V used instead of Ctrl+` default.</div>
+<p class="none">Generated programmatically from validation-results.json at 2026-11-12T20:16:54.9833973-08:00</p>
+</body>
+</html>

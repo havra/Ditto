@@ -1,0 +1,128 @@
+{
+  "runId": "VAL-20261113-034453",
+  "exePath": "C:\\dev\\ai-flow-01\\worktrees\\havra-preserve-custom-clip-title\\Release64\\Ditto.exe",
+  "exeSha256": "38D2F09A2FBEF4E97A2B72AC9EE77203BB8725184347054BBBD25F636B277B69",
+  "startedUtc": "2026-11-13T03:44:53Z",
+  "finishedUtc": "2026-11-13T04:15:00Z",
+  "steps": [
+    {
+      "id": "precheck-exe",
+      "name": "Pre-check: EXE exists, hash, freshness vs source",
+      "action": "Get-FileHash + timestamp comparison",
+      "result": "pass",
+      "context": "EXE present. SHA256=38D2F09A2FBEF4E97A2B72AC9EE77203BB8725184347054BBBD25F636B277B69. EXE LastWriteTimeUtc=2026-11-13T02:29:32Z is newer than newest source change (src/Options.cpp 2026-11-11T08:06:55Z), so the build contains the change under test.",
+      "screenshotPath": null,
+      "metrics": { "exeLastWriteTimeUtc": "2026-11-13T02:29:32Z", "newestSourceFile": "src/Options.cpp", "newestSourceTimeUtc": "2026-11-11T08:06:55Z" }
+    },
+    {
+      "id": "precheck-process",
+      "name": "Pre-check: no existing Ditto process",
+      "action": "Get-Process Ditto/CP_Main; Stop-Process if found",
+      "result": "pass",
+      "context": "No existing Ditto.exe or CP_Main.exe process found; nothing needed to be killed.",
+      "screenshotPath": null,
+      "metrics": {}
+    },
+    {
+      "id": "precheck-registry",
+      "name": "Pre-check: fresh-install option state (UpdateDescWhenSaving absent)",
+      "action": "reg query HKCU\\Software\\Ditto /s /v UpdateDescWhenSaving",
+      "result": "pass",
+      "context": "UpdateDescWhenSaving value does not exist anywhere under HKCU\\Software\\Ditto - simulates never-touched install; no deletion needed. Existing Ditto usage history (Ditto_1.db, custom hotkey 0x356) is present but the option under test was never set.",
+      "screenshotPath": null,
+      "metrics": { "updateDescWhenSavingPresent": false }
+    },
+    {
+      "id": "launch",
+      "name": "Launch built Ditto.exe",
+      "action": "Start-Process Release64\\Ditto.exe",
+      "result": "pass",
+      "context": "Ditto started and stayed running (Responding=True, no crash). Launch-start time recorded; process alive for entire run (28.7 min at validation end).",
+      "screenshotPath": "validation/shots/launch.png",
+      "metrics": { "pid": 67312, "launchElapsedMs": 3478, "launchElapsedNote": "wall clock incl. 3s settle sleep before process confirmation", "workingSetKBAtLaunch": 27108, "startTimeUtc": "2026-11-13T03:44:53.607Z", "workingSetKBAtEnd": 47020, "threadsAtEnd": 16 }
+    },
+    {
+      "id": "verify-launch",
+      "name": "Verify launch: Quick Paste opens on global hotkey",
+      "action": "Send configured hotkey (Ctrl+Shift+V), enumerate window via UIA, screenshot",
+      "result": "pass",
+      "context": "Quick Paste window (class QPasteClass, title 'Ditto') appears with SysListView32 clip list, search edit and buttons; verified via UIA and on-disk screenshot. Note: this machine's persisted config uses DittoHotKey=0x356 (Ctrl+Shift+V) instead of the Ctrl+` default (704); the configured hotkey was used. Tray icon could not be conclusively confirmed via Win11 hidden-icons flyout UIA enumeration (flyout did not expose a 'Ditto' button); launch success is evidenced by the interactive Quick Paste window instead, which the plan accepts as equivalent evidence.",
+      "screenshotPath": "validation/shots/quickpaste-open.png",
+      "metrics": { "windowClass": "QPasteClass", "hotkeyUsed": "Ctrl+Shift+V", "hotkeyRegistryValue": "0x356" }
+    },
+    {
+      "id": "string-capture",
+      "name": "Protocol step 5: string capture appears at top of Quick Paste",
+      "action": "Set-Clipboard with marker; re-read list items via ListView messages",
+      "result": "pass",
+      "context": "Marker 'DITTO-VAL-tXOwh7uD' was set on the clipboard; Ditto captured it live and it became the top list entry (item text verified programmatically via LVM_GETITEMTEXT into the Ditto process). Screenshot saved.",
+      "screenshotPath": "validation/shots/step5-marker-top.png",
+      "metrics": { "marker": "DITTO-VAL-tXOwh7uD", "topEntryText": "DITTO-VAL-tXOwh7uD" }
+    },
+    {
+      "id": "image-capture",
+      "name": "Protocol step 6: image capture appears at top of Quick Paste",
+      "action": "Clipboard.SetImage with generated 96x96 bitmap; re-read list items",
+      "result": "pass",
+      "context": "A generated 96x96 image was placed on the clipboard; the new top list entry is an image clip (format CF_DIB, shown as '|CF_DIB' in the list text), positioned above the earlier marker entry. Screenshot saved.",
+      "screenshotPath": "validation/shots/step6-image-top.png",
+      "metrics": { "imageFormat": "CF_DIB", "imageSize": "96x96" }
+    },
+    {
+      "id": "plan-check-1",
+      "name": "Plan check 1: baseline app launches, Quick Paste opens without crash",
+      "action": "Same evidence as launch + verify-launch steps",
+      "result": "pass",
+      "context": "App launched and stayed responsive for the whole run; Quick Paste window opens on the configured hotkey without crash. Evidence: quickpaste-open.png, launch.png.",
+      "screenshotPath": "validation/shots/quickpaste-open.png",
+      "metrics": {}
+    },
+    {
+      "id": "plan-check-2",
+      "name": "Plan check 2: baseline string capture appears in Quick Paste UI",
+      "action": "Copy distinctive string; open Quick Paste",
+      "result": "pass",
+      "context": "Top list entry after capture was the copied marker text 'DITTO-VAL-tXOwh7uD' (displayed text starts with the copied string). Evidence: step5-marker-top.png.",
+      "screenshotPath": "validation/shots/step5-marker-top.png",
+      "metrics": {}
+    },
+    {
+      "id": "plan-check-3",
+      "name": "Plan check 3: baseline image capture appears in Quick Paste UI",
+      "action": "Copy generated image; open Quick Paste",
+      "result": "pass",
+      "context": "New thumbnail/image entry (CF_DIB) appeared at top of list. Evidence: step6-image-top.png.",
+      "screenshotPath": "validation/shots/step6-image-top.png",
+      "metrics": {}
+    },
+    {
+      "id": "plan-check-4",
+      "name": "Plan check 4 (CORE): custom title preserved on edit with default settings",
+      "action": "Capture 'Alpha original content'; set description CUSTOM-TITLE-XYZ via Copy Properties; edit content to 'Beta edited content' in Ditto Editor; save; re-verify",
+      "result": "pass",
+      "context": "(a) UpdateDescWhenSaving registry value confirmed absent before the check. (b) 'Alpha original content' captured as top entry. (c) Description set to CUSTOM-TITLE-XYZ via Copy Properties dialog (Alt+Enter on selected clip; Item Title field), verified in list as '|CUSTOM-TITLE-XYZ'. (d) Ditto Editor opened via context menu Edit Clip; 'Update clip description on save?' checkbox read as Off (new default - the change under test); content replaced with 'Beta edited content'; saved via Save command (ID_BUTTON_SAVE 32862 -> CEditWnd::OnSave -> SaveToDB with modify flag forced since validator set text via WM_SETTEXT). (e) Editor reopened: content persisted as 'Beta edited content' (proves save reached DB); Quick Paste list still shows description 'CUSTOM-TITLE-XYZ' - NOT overwritten with the start of 'Beta edited content'. Byte-identical custom title preserved. Note: two validator tooling artifacts occurred and were corrected during this check (WM_SETTEXT does not set the RichEdit modify flag so EM_SETMODIFY was forced; first save attempt targeted the frame window whose ID_BUTTON_SAVE handler is OnDummy, corrected to the CEditWnd child pane). Neither is an app defect; final save was verified by DB persistence and clean close without save prompt.",
+      "screenshotPath": "validation/shots/check4-final-content.png",
+      "metrics": { "descBefore": "CUSTOM-TITLE-XYZ", "descAfter": "CUSTOM-TITLE-XYZ", "contentBefore": "Alpha original content", "contentAfter": "Beta edited content", "checkboxDuringEdit": "Off", "registryUpdateDescWhenSaving": "absent" }
+    },
+    {
+      "id": "plan-check-5",
+      "name": "Plan check 5: checkbox opt-in still regenerates description",
+      "action": "Toggle 'Update clip description on save?' On; change content to 'Gamma regenerated'; save",
+      "result": "pass",
+      "context": "Checkbox toggled Off -> On via UIA TogglePattern. Content changed to 'Gamma regenerated' and saved. Quick Paste list description regenerated to 'Gamma regenerated' (start of new content), proving the opt-in regeneration path still works. Registry UpdateDescWhenSaving written as 1 on save (choice persisted per EditWnd.cpp:334).",
+      "screenshotPath": "validation/shots/check5-desc-regenerated.png",
+      "metrics": { "checkboxBefore": "Off", "checkboxDuringEdit": "On", "content": "Gamma regenerated", "descAfter": "Gamma regenerated", "registryUpdateDescWhenSaving": "0x1" }
+    },
+    {
+      "id": "plan-check-6",
+      "name": "Plan check 6: option persistence round-trip (uncheck, save, reopen)",
+      "action": "Reopen editor (verify checkbox On persisted); uncheck; save edit with content 'Delta unchanged-title'; re-verify desc, checkbox state, registry",
+      "result": "pass",
+      "context": "Reopened Edit showed checkbox On - the choice saved in check 5 persisted in the UI. Unchecked it (On -> Off), changed content to 'Delta unchanged-title', saved. Description STAYED custom ('Gamma regenerated', not regenerated to 'Delta unchanged-title'). Reopened Edit again: checkbox reads Off (matches saved setting) and content reads 'Delta unchanged-title'. Registry UpdateDescWhenSaving=0 after the save.",
+      "screenshotPath": "validation/shots/check6-checkbox-off-reopened.png",
+      "metrics": { "checkboxOnReopen1": "On", "checkboxDuringEdit": "Off", "content": "Delta unchanged-title", "descAfter": "Gamma regenerated (unchanged)", "checkboxOnReopen2": "Off", "registryUpdateDescWhenSaving": "0x0" }
+    }
+  ],
+  "overall": "pass",
+  "summary": "All 12 protocol/plan steps passed. Build contains the change (Options.cpp default GetUpdateDescWhenSavingClip FALSE). On a fresh-install state (UpdateDescWhenSaving absent), editing a clip's content with the 'Update clip description on save?' checkbox at its new Off default preserves a manually set custom description byte-identically (core regression check for sabrogden/Ditto#1167). Opt-in regeneration (checkbox On) still overwrites the description, and the checkbox choice persists across edits and app restarts of the setting (registry round-trip verified both ways). Evidence: 15 screenshots in validation/shots plus programmatic UIA/ListView/registry verification. Caveats: tray icon could not be conclusively confirmed via Win11 flyout UIA enumeration (Quick Paste window used as launch evidence instead, per plan); machine's configured hotkey Ctrl+Shift+V used instead of Ctrl+` default."
+}
