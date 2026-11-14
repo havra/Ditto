@@ -71,7 +71,7 @@
 <td><span class='badge pass'>PASS</span></td>
 <td class='ctx'>Start-Process Release64\Ditto.exe</td>
 <td class='ctx'>Ditto started and stayed running (Responding=True, no crash). Launch-start time recorded; process alive for entire run (28.7 min at validation end).</td>
-<td><a href='validation/shots/launch.png' target='_blank'>screenshot</a><br><img src='validation/shots/launch.png' alt='launch' loading='lazy'></td>
+<td><a href='shots/launch.png' target='_blank'>screenshot</a><br><img src='shots/launch.png' alt='launch' loading='lazy'></td>
 <td><table class='metrics'><tr><th>metric</th><th>value</th></tr><tr><td>pid</td><td>67312</td></tr><tr><td>launchElapsedMs</td><td>3478</td></tr><tr><td>launchElapsedNote</td><td>wall clock incl. 3s settle sleep before process confirmation</td></tr><tr><td>workingSetKBAtLaunch</td><td>27108</td></tr><tr><td>startTimeUtc</td><td>11/13/2026 03:44:53</td></tr><tr><td>workingSetKBAtEnd</td><td>47020</td></tr><tr><td>threadsAtEnd</td><td>16</td></tr></table></td>
 </tr><tr class='step pass'>
 <td>verify-launch</td>
@@ -79,7 +79,7 @@
 <td><span class='badge pass'>PASS</span></td>
 <td class='ctx'>Send configured hotkey (Ctrl+Shift+V), enumerate window via UIA, screenshot</td>
 <td class='ctx'>Quick Paste window (class QPasteClass, title &#39;Ditto&#39;) appears with SysListView32 clip list, search edit and buttons; verified via UIA and on-disk screenshot. Note: this machine&#39;s persisted config uses DittoHotKey=0x356 (Ctrl+Shift+V) instead of the Ctrl+` default (704); the configured hotkey was used. Tray icon could not be conclusively confirmed via Win11 hidden-icons flyout UIA enumeration (flyout did not expose a &#39;Ditto&#39; button); launch success is evidenced by the interactive Quick Paste window instead, which the plan accepts as equivalent evidence.</td>
-<td><a href='validation/shots/quickpaste-open.png' target='_blank'>screenshot</a><br><img src='validation/shots/quickpaste-open.png' alt='verify-launch' loading='lazy'></td>
+<td><a href='shots/quickpaste-open.png' target='_blank'>screenshot</a><br><img src='shots/quickpaste-open.png' alt='verify-launch' loading='lazy'></td>
 <td><table class='metrics'><tr><th>metric</th><th>value</th></tr><tr><td>windowClass</td><td>QPasteClass</td></tr><tr><td>hotkeyUsed</td><td>Ctrl+Shift+V</td></tr><tr><td>hotkeyRegistryValue</td><td>0x356</td></tr></table></td>
 </tr><tr class='step pass'>
 <td>string-capture</td>
@@ -87,7 +87,7 @@
 <td><span class='badge pass'>PASS</span></td>
 <td class='ctx'>Set-Clipboard with marker; re-read list items via ListView messages</td>
 <td class='ctx'>Marker &#39;DITTO-VAL-tXOwh7uD&#39; was set on the clipboard; Ditto captured it live and it became the top list entry (item text verified programmatically via LVM_GETITEMTEXT into the Ditto process). Screenshot saved.</td>
-<td><a href='validation/shots/step5-marker-top.png' target='_blank'>screenshot</a><br><img src='validation/shots/step5-marker-top.png' alt='string-capture' loading='lazy'></td>
+<td><a href='shots/step5-marker-top.png' target='_blank'>screenshot</a><br><img src='shots/step5-marker-top.png' alt='string-capture' loading='lazy'></td>
 <td><table class='metrics'><tr><th>metric</th><th>value</th></tr><tr><td>marker</td><td>DITTO-VAL-tXOwh7uD</td></tr><tr><td>topEntryText</td><td>DITTO-VAL-tXOwh7uD</td></tr></table></td>
 </tr><tr class='step pass'>
 <td>image-capture</td>
@@ -95,7 +95,7 @@
 <td><span class='badge pass'>PASS</span></td>
 <td class='ctx'>Clipboard.SetImage with generated 96x96 bitmap; re-read list items</td>
 <td class='ctx'>A generated 96x96 image was placed on the clipboard; the new top list entry is an image clip (format CF_DIB, shown as &#39;|CF_DIB&#39; in the list text), positioned above the earlier marker entry. Screenshot saved.</td>
-<td><a href='validation/shots/step6-image-top.png' target='_blank'>screenshot</a><br><img src='validation/shots/step6-image-top.png' alt='image-capture' loading='lazy'></td>
+<td><a href='shots/step6-image-top.png' target='_blank'>screenshot</a><br><img src='shots/step6-image-top.png' alt='image-capture' loading='lazy'></td>
 <td><table class='metrics'><tr><th>metric</th><th>value</th></tr><tr><td>imageFormat</td><td>CF_DIB</td></tr><tr><td>imageSize</td><td>96x96</td></tr></table></td>
 </tr><tr class='step pass'>
 <td>plan-check-1</td>
@@ -103,7 +103,7 @@
 <td><span class='badge pass'>PASS</span></td>
 <td class='ctx'>Same evidence as launch + verify-launch steps</td>
 <td class='ctx'>App launched and stayed responsive for the whole run; Quick Paste window opens on the configured hotkey without crash. Evidence: quickpaste-open.png, launch.png.</td>
-<td><a href='validation/shots/quickpaste-open.png' target='_blank'>screenshot</a><br><img src='validation/shots/quickpaste-open.png' alt='plan-check-1' loading='lazy'></td>
+<td><a href='shots/quickpaste-open.png' target='_blank'>screenshot</a><br><img src='shots/quickpaste-open.png' alt='plan-check-1' loading='lazy'></td>
 <td><table class='metrics'><tr><th>metric</th><th>value</th></tr></table></td>
 </tr><tr class='step pass'>
 <td>plan-check-2</td>
@@ -111,7 +111,7 @@
 <td><span class='badge pass'>PASS</span></td>
 <td class='ctx'>Copy distinctive string; open Quick Paste</td>
 <td class='ctx'>Top list entry after capture was the copied marker text &#39;DITTO-VAL-tXOwh7uD&#39; (displayed text starts with the copied string). Evidence: step5-marker-top.png.</td>
-<td><a href='validation/shots/step5-marker-top.png' target='_blank'>screenshot</a><br><img src='validation/shots/step5-marker-top.png' alt='plan-check-2' loading='lazy'></td>
+<td><a href='shots/step5-marker-top.png' target='_blank'>screenshot</a><br><img src='shots/step5-marker-top.png' alt='plan-check-2' loading='lazy'></td>
 <td><table class='metrics'><tr><th>metric</th><th>value</th></tr></table></td>
 </tr><tr class='step pass'>
 <td>plan-check-3</td>
@@ -119,7 +119,7 @@
 <td><span class='badge pass'>PASS</span></td>
 <td class='ctx'>Copy generated image; open Quick Paste</td>
 <td class='ctx'>New thumbnail/image entry (CF_DIB) appeared at top of list. Evidence: step6-image-top.png.</td>
-<td><a href='validation/shots/step6-image-top.png' target='_blank'>screenshot</a><br><img src='validation/shots/step6-image-top.png' alt='plan-check-3' loading='lazy'></td>
+<td><a href='shots/step6-image-top.png' target='_blank'>screenshot</a><br><img src='shots/step6-image-top.png' alt='plan-check-3' loading='lazy'></td>
 <td><table class='metrics'><tr><th>metric</th><th>value</th></tr></table></td>
 </tr><tr class='step pass'>
 <td>plan-check-4</td>
@@ -127,7 +127,7 @@
 <td><span class='badge pass'>PASS</span></td>
 <td class='ctx'>Capture &#39;Alpha original content&#39;; set description CUSTOM-TITLE-XYZ via Copy Properties; edit content to &#39;Beta edited content&#39; in Ditto Editor; save; re-verify</td>
 <td class='ctx'>(a) UpdateDescWhenSaving registry value confirmed absent before the check. (b) &#39;Alpha original content&#39; captured as top entry. (c) Description set to CUSTOM-TITLE-XYZ via Copy Properties dialog (Alt+Enter on selected clip; Item Title field), verified in list as &#39;|CUSTOM-TITLE-XYZ&#39;. (d) Ditto Editor opened via context menu Edit Clip; &#39;Update clip description on save?&#39; checkbox read as Off (new default - the change under test); content replaced with &#39;Beta edited content&#39;; saved via Save command (ID_BUTTON_SAVE 32862 -&gt; CEditWnd::OnSave -&gt; SaveToDB with modify flag forced since validator set text via WM_SETTEXT). (e) Editor reopened: content persisted as &#39;Beta edited content&#39; (proves save reached DB); Quick Paste list still shows description &#39;CUSTOM-TITLE-XYZ&#39; - NOT overwritten with the start of &#39;Beta edited content&#39;. Byte-identical custom title preserved. Note: two validator tooling artifacts occurred and were corrected during this check (WM_SETTEXT does not set the RichEdit modify flag so EM_SETMODIFY was forced; first save attempt targeted the frame window whose ID_BUTTON_SAVE handler is OnDummy, corrected to the CEditWnd child pane). Neither is an app defect; final save was verified by DB persistence and clean close without save prompt.</td>
-<td><a href='validation/shots/check4-final-content.png' target='_blank'>screenshot</a><br><img src='validation/shots/check4-final-content.png' alt='plan-check-4' loading='lazy'></td>
+<td><a href='shots/check4-final-content.png' target='_blank'>screenshot</a><br><img src='shots/check4-final-content.png' alt='plan-check-4' loading='lazy'></td>
 <td><table class='metrics'><tr><th>metric</th><th>value</th></tr><tr><td>descBefore</td><td>CUSTOM-TITLE-XYZ</td></tr><tr><td>descAfter</td><td>CUSTOM-TITLE-XYZ</td></tr><tr><td>contentBefore</td><td>Alpha original content</td></tr><tr><td>contentAfter</td><td>Beta edited content</td></tr><tr><td>checkboxDuringEdit</td><td>Off</td></tr><tr><td>registryUpdateDescWhenSaving</td><td>absent</td></tr></table></td>
 </tr><tr class='step pass'>
 <td>plan-check-5</td>
@@ -135,7 +135,7 @@
 <td><span class='badge pass'>PASS</span></td>
 <td class='ctx'>Toggle &#39;Update clip description on save?&#39; On; change content to &#39;Gamma regenerated&#39;; save</td>
 <td class='ctx'>Checkbox toggled Off -&gt; On via UIA TogglePattern. Content changed to &#39;Gamma regenerated&#39; and saved. Quick Paste list description regenerated to &#39;Gamma regenerated&#39; (start of new content), proving the opt-in regeneration path still works. Registry UpdateDescWhenSaving written as 1 on save (choice persisted per EditWnd.cpp:334).</td>
-<td><a href='validation/shots/check5-desc-regenerated.png' target='_blank'>screenshot</a><br><img src='validation/shots/check5-desc-regenerated.png' alt='plan-check-5' loading='lazy'></td>
+<td><a href='shots/check5-desc-regenerated.png' target='_blank'>screenshot</a><br><img src='shots/check5-desc-regenerated.png' alt='plan-check-5' loading='lazy'></td>
 <td><table class='metrics'><tr><th>metric</th><th>value</th></tr><tr><td>checkboxBefore</td><td>Off</td></tr><tr><td>checkboxDuringEdit</td><td>On</td></tr><tr><td>content</td><td>Gamma regenerated</td></tr><tr><td>descAfter</td><td>Gamma regenerated</td></tr><tr><td>registryUpdateDescWhenSaving</td><td>0x1</td></tr></table></td>
 </tr><tr class='step pass'>
 <td>plan-check-6</td>
@@ -143,7 +143,7 @@
 <td><span class='badge pass'>PASS</span></td>
 <td class='ctx'>Reopen editor (verify checkbox On persisted); uncheck; save edit with content &#39;Delta unchanged-title&#39;; re-verify desc, checkbox state, registry</td>
 <td class='ctx'>Reopened Edit showed checkbox On - the choice saved in check 5 persisted in the UI. Unchecked it (On -&gt; Off), changed content to &#39;Delta unchanged-title&#39;, saved. Description STAYED custom (&#39;Gamma regenerated&#39;, not regenerated to &#39;Delta unchanged-title&#39;). Reopened Edit again: checkbox reads Off (matches saved setting) and content reads &#39;Delta unchanged-title&#39;. Registry UpdateDescWhenSaving=0 after the save.</td>
-<td><a href='validation/shots/check6-checkbox-off-reopened.png' target='_blank'>screenshot</a><br><img src='validation/shots/check6-checkbox-off-reopened.png' alt='plan-check-6' loading='lazy'></td>
+<td><a href='shots/check6-checkbox-off-reopened.png' target='_blank'>screenshot</a><br><img src='shots/check6-checkbox-off-reopened.png' alt='plan-check-6' loading='lazy'></td>
 <td><table class='metrics'><tr><th>metric</th><th>value</th></tr><tr><td>checkboxOnReopen1</td><td>On</td></tr><tr><td>checkboxDuringEdit</td><td>Off</td></tr><tr><td>content</td><td>Delta unchanged-title</td></tr><tr><td>descAfter</td><td>Gamma regenerated (unchanged)</td></tr><tr><td>checkboxOnReopen2</td><td>Off</td></tr><tr><td>registryUpdateDescWhenSaving</td><td>0x0</td></tr></table></td>
 </tr>
 </table>
